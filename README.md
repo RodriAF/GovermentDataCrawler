@@ -1,4 +1,4 @@
-# GovermentDataCrawler
+# Government Data Crawler
 
 This code has been used to web scrape the Spanish Government Data for grants and concessions.
 
@@ -8,6 +8,10 @@ The original idea came from the [Jaime Obregon repository for "Subenciones"](htt
 
 ## Purpose of the code
 
-The main purpose of this code is to add some columns to the dataset that could be usefull for making some insights (graphs, statistics, reports...) of the set of grants and concessions made by the spanish government. This insights are part of a bigger project 
+The main purpose of this code is to add some columns to the dataset that could be usefull for making some insights (graphs, statistics, reports...) of the set of grants and concessions made by the spanish government. This insights are meant to be the data analysis part of a bigger project named [Academy Government Data](https://github.com/empathyco/academy-government-data).
+
+## Instructions
+
+### Dataset
 
 
