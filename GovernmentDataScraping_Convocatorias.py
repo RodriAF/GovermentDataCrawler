@@ -8,17 +8,17 @@ import pandas as pd
 import numpy as np
 import os
 ​
-# Get the direction where the dataset is
+# Getting the current working directory
 os.getcwd()
 os.chdir()
 
 # Loading the dataset
 convocatorias = pd.read_csv('convocatoriasINDEX.csv',header = 0,low_memory=False)
 ​
-# Get only the column with the BDNS code
+# Get only the column with the BDNS codes
 codigos1 = convocatorias.codigo_bdns;codigos1 
 ​
-# This solves the verifying access problem
+# This solves the verifying access problem of the webpage 
 import ssl
 ssl._create_default_https_context = ssl._create_unverified_context
 ​
@@ -44,27 +44,29 @@ codigos1[n:]
 for i in codigos1[n:].index: 
 # si n=0 empieza desde el principio, si n es otro numero empieza desde donde lo dejaste
         
-        
+    # First the url is created    
     url = 'https://www.pap.hacienda.gob.es/bdnstrans/GE/es/convocatoria/' + str(codigos1[i])
         
     
-        
+    # It first tries to open the url     
     try:
         rawpage = request.urlopen(url) # Open the url
-    except HTTPError as err:
+    except HTTPError as err: # If the url does not exists a "not found" error is printed
         if err.code == 404:
             print(codigos1[i]," not found")
-               
+    # If the url exists, the code continues here           
     else:
-        #Extract only the article of the page
+        # Parses the webpage and extracts only the article of the page
         contenido = BeautifulSoup(rawpage, "lxml").article
             
         # Assigning values
+        # it finds all div in the html code of the webpage and selects each for the piece of information its needed
         importe_total = contenido.find_all('div',attrs = 'bloque')[7]
         data.importe_total[i] = 'NaN'
-        if importe_total.find('p') is not None:
+        if importe_total.find('p') is not None: # From that "div" extracts "p" if it is not none
             data.importe_total[i] = importe_total.find('p').get_text()
         
+        # The same for the rest of the "bloques"
         tipo_beneficiario = contenido.find_all('div',attrs = 'bloque')[10]
         data.tipo_beneficiario[i] = 'NaN'
         if tipo_beneficiario.find('li') is not None:
@@ -86,9 +88,9 @@ for i in codigos1[n:].index:
         data.finalidad[i] = 'NaN'
         if finalidad.find('p') is not None:
             data.finalidad[i] = finalidad.find('p').get_text()
-​
+​   # adds one to the counter and calculates the percentage is scraped
     n += 1
     print(round(n / len(data.index) * 100, 4),'%')
         
-# Saving the data
+# Saving the data in csv
 data.to_csv("convocatorias_complete.csv")
